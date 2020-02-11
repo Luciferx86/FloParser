@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ExcelParsing</string>
+    <string name="button_text">Parse and Store</string>
+    <string name="url_hint">Parse and Store</string>
+</resources>
