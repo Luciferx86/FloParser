@@ -28,9 +28,7 @@ class ContactsViewModel(application: Application) : AndroidViewModel(application
      * returns Work Info(CSV)
      */
 
-    fun csvWorkObserver() : LiveData<List<WorkInfo>>{
-        return csvWorkInfo
-    }
+    fun csvWorkObserver() : LiveData<List<WorkInfo>> = csvWorkInfo
 
     /**
      * returns Work Info(API)
