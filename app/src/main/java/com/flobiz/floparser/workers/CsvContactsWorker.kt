@@ -32,11 +32,13 @@ class CsvContactsWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, pa
 
             //getting url to CSV file
             val url= inputData.getString("url")
+
+            Log.d("URL",url)
             makeStatusNotification("Saving Contacts from CSV", applicationContext, "CSV Saving")
 
 
-            //creating data object from CSV results
-            val myData = createDataFromArray(readCSV(url))
+            //creating pair object from CSV results
+            val myData = createPairFromArray(readCSV(url))
 
             //MAIN METHOD CALL
 
@@ -44,8 +46,9 @@ class CsvContactsWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, pa
 
 
             storeContacts(
-                myData.getStringArray("allNames"),
-                myData.getStringArray("allNumbers")
+                myData.first,myData.second
+//                myData.getStringArray("allNames"),
+//                myData.getStringArray("allNumbers")
             )
 
             val x = Data.Builder()
@@ -126,20 +129,18 @@ class CsvContactsWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, pa
     /**
      * function to create Data object from Array containing all names and numbers
      */
-    private fun createDataFromArray(allData:List<Array<String>?>?): Data {
+    private fun createPairFromArray(allData:List<Array<String>?>?): Pair<Array<String>,Array<String>> {
 
         val allNames = object : ArrayList<String>(){}
         val allNumbers = object : ArrayList<String>(){}
-        val builder = Data.Builder()
         val myItr = allData?.iterator()
         while (myItr?.hasNext() == true){
             val x = myItr.next()
             x?.get(0)?.also { it -> allNames.add(it) }
             x?.get(1)?.also { it -> allNumbers.add(it) }
         }
-        builder.putStringArray("allNames",allNames.toTypedArray())
-        builder.putStringArray("allNumbers",allNumbers.toTypedArray())
-        return builder.build()
+        var pair:Pair<Array<String>,Array<String>> = Pair(allNames.toTypedArray(),allNumbers.toTypedArray())
+        return pair
     }
 
     /**
@@ -159,8 +160,11 @@ class CsvContactsWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, pa
 
         val records = reader.readAll()
 
+        Log.d("RecordsSize",records.size.toString())
+
         val iterator: Iterator<Array<String>> = records.iterator()
 
+        iterator.next()
         iterator.next()
         iterator.next()
 

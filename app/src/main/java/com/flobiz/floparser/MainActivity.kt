@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 //    lateinit var viewModel: ContactsViewModel
 
-    private var working: Boolean = false
+//    private var working: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
                     //updating notification
                     showWorkFinished("CSV")
-                    working = false
+//                    working = false
                     Toast.makeText(
                         this@MainActivity,
                         "Contacts Stored Successfully",
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
                     //updating notification
                     showWorkFinished("API")
-                    working = false
+//                    working = false
                     Toast.makeText(
                         this@MainActivity,
                         "Contacts Stored Successfully",
@@ -92,8 +92,8 @@ class MainActivity : AppCompatActivity() {
 
         getContactsFromCsv.setOnClickListener {
             //check if already working
-            if (!working) {
-                working = true
+//            if (!working) {
+//                working = true
                 val url = urlText.text.toString()
 
                 //checking if entered text is correct URL
@@ -103,25 +103,25 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "Url not in proper Format", Toast.LENGTH_LONG).show()
                 }
-            } else {
+//            } else {
 
                 //work already in progress
                 Toast.makeText(this, "Work in progress", Toast.LENGTH_LONG).show()
             }
-        }
+//        }
 
         getAllContactsFromApi.setOnClickListener {
 
             //check if already working
-            if (!working) {
-                working = true
+//            if (!working) {
+//                working = true
                 viewModel.startSavingFromApi()
-            } else {
+//            } else {
 
                 //work already in progress
                 Toast.makeText(this, "Work in progress", Toast.LENGTH_LONG).show()
             }
-        }
+//        }
 
     }
 
