@@ -2,6 +2,9 @@ package com.flobiz.floparser
 
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.InputStream
 import java.net.URL
 
 
@@ -25,6 +29,27 @@ class MainActivity : AppCompatActivity() {
 //    lateinit var viewModel: ContactsViewModel
 
 //    private var working: Boolean = false
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val viewModel: ContactsViewModel by viewModels()
+
+        if (requestCode == 123 && resultCode == Activity.RESULT_OK) {
+            val selectedfile: Uri? =
+                data?.getData()
+            //The uri with the location of the file
+            Log.d("SelectedFile",selectedfile.toString())
+            selectedfile?.let {
+                viewModel.startSavingFromFile(it)
+
+                val inputStream: InputStream? = contentResolver.openInputStream(it)
+                Log.d("SelectedFile", "Size ${inputStream.toString()}")
+            }
+
+
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +146,11 @@ class MainActivity : AppCompatActivity() {
                 //work already in progress
                 Toast.makeText(this, "Work in progress", Toast.LENGTH_LONG).show()
             }
+
+
+        selectFileFromInternalStorage.setOnClickListener {
+            openFileDialog()
+        }
 //        }
 
     }
@@ -169,5 +199,14 @@ class MainActivity : AppCompatActivity() {
             makeStatusNotification("Contacts Saved", applicationContext, "API Saving")
         }
     }
+
+    fun openFileDialog() { //Read file in Internal Storage
+        val intent = Intent()
+            .setType("text/comma-separated-values")
+            .setAction(Intent.ACTION_GET_CONTENT)
+
+        startActivityForResult(Intent.createChooser(intent, "Select a file"), 123)
+    }
+
 
 }

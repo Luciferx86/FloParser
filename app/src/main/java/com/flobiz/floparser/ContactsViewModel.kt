@@ -1,6 +1,7 @@
 package com.flobiz.floparser
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.work.Data
@@ -9,6 +10,8 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.flobiz.floparser.workers.ApiContactsWorker
 import com.flobiz.floparser.workers.CsvContactsWorker
+import com.flobiz.floparser.workers.FileContactsWorker
+import java.net.URI
 
 /**
  * @created-by: Akshay Arora
@@ -70,6 +73,17 @@ class ContactsViewModel(application: Application) : AndroidViewModel(application
 
         val builder = Data.Builder()
         val saveRequest = OneTimeWorkRequestBuilder<ApiContactsWorker>()
+            .setInputData(builder.build())
+            .addTag("SavingApiContacts")
+            .build()
+
+        workManager.enqueue(saveRequest)
+    }
+
+    fun startSavingFromFile(uri : Uri){
+        val builder = Data.Builder()
+        builder.putString("URI",uri.toString())
+        val saveRequest = OneTimeWorkRequestBuilder<FileContactsWorker>()
             .setInputData(builder.build())
             .addTag("SavingApiContacts")
             .build()
